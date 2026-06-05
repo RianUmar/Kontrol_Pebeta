@@ -27,7 +27,7 @@ void main() {
     ));
 
     // Verify that the dashboard header is present
-    expect(find.text('HEXAPOD CORE'), findsOneWidget);
+    expect(find.text('ROBOTECH TADULAKO'), findsAtLeastNWidgets(1));
 
     // Clean up the widget tree and allow all disposals to complete
     await tester.pumpWidget(const SizedBox());

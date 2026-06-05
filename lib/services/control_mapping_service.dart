@@ -50,6 +50,14 @@ class ControlMappingService extends ChangeNotifier {
     'kepala_kanan': 'j',
     'kepala_tengah': 'e',
     'stop': 'x',
+    'lengan_naik': 'u',
+    'lengan_naik_stop': 'U',
+    'lengan_turun': 'n',
+    'lengan_turun_stop': 'N',
+    'capit_tangkap': 'o',
+    'capit_tangkap_stop': 'O',
+    'capit_lepas': 'c',
+    'capit_lepas_stop': 'C',
   };
 
   Map<String, String> _mappings = {};

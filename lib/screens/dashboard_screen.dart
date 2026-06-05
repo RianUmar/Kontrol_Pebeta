@@ -34,8 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final logs = _btService.consoleLogs;
 
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('HEXAPOD CORE'),
+            title: const Text('ROBOTECH TADULAKO'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.refresh, color: Color(0xFF00E5FF)),
@@ -99,20 +100,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Container(
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0B101D),
+                    color: const Color(0xFF0B101D).withOpacity(0.55),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF1E293B), width: 1.5),
+                    border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.5), width: 1.5),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF0F1524),
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F1524).withOpacity(0.5),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                           border: Border(
-                            bottom: BorderSide(color: Color(0xFF1E293B), width: 1),
+                            bottom: BorderSide(color: const Color(0xFF1E293B).withOpacity(0.4), width: 1),
                           ),
                         ),
                         child: Row(
@@ -200,18 +201,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String statusText = 'DISCONNECTED';
     Color statusColor = const Color(0xFFFF3D00);
     IconData statusIcon = Icons.bluetooth_disabled;
-    List<Color> gradientColors = [const Color(0xFF1E1B29), const Color(0xFF140F1D)];
+    List<Color> gradientColors = [const Color(0xFF1E1B29).withOpacity(0.6), const Color(0xFF140F1D).withOpacity(0.6)];
 
     if (isConnected) {
       statusText = 'SYSTEM ONLINE / CONNECTED';
       statusColor = const Color(0xFF00E5FF);
       statusIcon = Icons.bluetooth_connected;
-      gradientColors = [const Color(0xFF0C242E), const Color(0xFF071520)];
+      gradientColors = [const Color(0xFF0C242E).withOpacity(0.6), const Color(0xFF071520).withOpacity(0.6)];
     } else if (isConnecting) {
       statusText = 'ESTABLISHING LINK...';
       statusColor = const Color(0xFFFFB000);
       statusIcon = Icons.bluetooth_searching;
-      gradientColors = [const Color(0xFF2E220C), const Color(0xFF1E170A)];
+      gradientColors = [const Color(0xFF2E220C).withOpacity(0.6), const Color(0xFF1E170A).withOpacity(0.6)];
     }
 
     return Container(
@@ -224,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: statusColor.withOpacity(0.4), width: 1.5),
+        border: Border.all(color: statusColor.withOpacity(0.5), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: statusColor.withOpacity(0.08),
@@ -256,7 +257,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ROBOT INTERFACE STATE',
+                  'PEBETA 2025-2026',
                   style: GoogleFonts.orbitron(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -308,9 +309,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         margin: const EdgeInsets.all(32),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF111726),
+          color: const Color(0xFF111726).withOpacity(0.55),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF1E293B)),
+          border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.5)),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -368,13 +369,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _btService.consoleLogs.any((log) => log.contains("Connected to") && log.contains(device.address));
 
     final cardBorderColor = isThisDeviceConnected 
-        ? const Color(0xFF00E5FF)
-        : const Color(0xFF1E293B);
+        ? const Color(0xFF00E5FF).withOpacity(0.7)
+        : const Color(0xFF1E293B).withOpacity(0.4);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF111726),
+        color: const Color(0xFF111726).withOpacity(0.55),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: cardBorderColor, width: 1.5),
         boxShadow: isThisDeviceConnected

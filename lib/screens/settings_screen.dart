@@ -51,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF111726),
+        backgroundColor: const Color(0xFF111726).withOpacity(0.95),
         title: Text(
           'RESET MAPPINGS',
           style: GoogleFonts.orbitron(color: const Color(0xFFFF3D00), fontSize: 16, fontWeight: FontWeight.bold),
@@ -96,7 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
           return AlertDialog(
-            backgroundColor: const Color(0xFF111726),
+            backgroundColor: const Color(0xFF111726).withOpacity(0.95),
             title: Text(
               'ADD CUSTOM CHANNEL',
               style: GoogleFonts.orbitron(color: const Color(0xFF00E5FF), fontSize: 16, fontWeight: FontWeight.bold),
@@ -191,13 +191,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listenable: _mappingService,
       builder: (context, child) {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('SYSTEM SETTINGS'),
+            title: const Text('ROBOTECH TADULAKO'),
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment .stretch,
               children: [
                 // General Settings Card
                 _buildSectionHeader('GENERAL SYSTEMS'),
@@ -287,9 +288,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGeneralSettingsCard() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF111726),
+        color: const Color(0xFF111726).withOpacity(0.55),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.4)),
       ),
       child: SwitchListTile(
         title: Text(
@@ -314,9 +315,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111726),
+        color: const Color(0xFF111726).withOpacity(0.55),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.4)),
       ),
       child: Column(
         children: [
@@ -337,6 +338,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildMapField('kepala_kiri', 'HEAD TILT LEFT (F)'),
             _buildMapField('kepala_tengah', 'HEAD CENTER (E)'),
             _buildMapField('kepala_kanan', 'HEAD TILT RIGHT (J)'),
+          ]),
+          const Divider(color: Color(0xFF1E293B), height: 32),
+          _buildMappingSubCategory('Gripper Manipulator', [
+            _buildMapField('lengan_naik', 'ARM UP START (u)'),
+            _buildMapField('lengan_naik_stop', 'ARM UP STOP (U)'),
+            _buildMapField('lengan_turun', 'ARM DOWN START (n)'),
+            _buildMapField('lengan_turun_stop', 'ARM DOWN STOP (N)'),
+            _buildMapField('capit_tangkap', 'CLAW CLOSE START (o)'),
+            _buildMapField('capit_tangkap_stop', 'CLAW CLOSE STOP (O)'),
+            _buildMapField('capit_lepas', 'CLAW OPEN START (c)'),
+            _buildMapField('capit_lepas_stop', 'CLAW OPEN STOP (C)'),
           ]),
         ],
       ),
@@ -410,9 +422,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF111726),
+        color: const Color(0xFF111726).withOpacity(0.55),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.4)),
       ),
       child: customButtons.isEmpty
           ? Padding(

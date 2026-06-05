@@ -36,7 +36,7 @@ class HexapodControllerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hexapod Control',
+      title: 'PEBETA 2026',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
@@ -93,12 +93,71 @@ class _MainTabScreenState extends State<MainTabScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // Start with portrait orientation for the dashboard
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Reset to portrait when exiting the tab screen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    if (index == _selectedIndex) return;
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Dynamically change orientation based on the selected tab
+    if (index == 1) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF070B12), // Deep dark space background
       body: SafeArea(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: _screens,
+        child: Stack(
+          children: [
+            // Centered Cyberpunk Logo Background
+            Positioned.fill(
+              child: Center(
+                child: Opacity(
+                  opacity: 0.50, // Subtle transparency to stay in background
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Sub-screens
+            IndexedStack(
+              index: _selectedIndex,
+              children: _screens,
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: Container(
@@ -109,11 +168,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
+          onTap: _onItemTapped,
           backgroundColor: const Color(0xFF070B12),
           selectedItemColor: const Color(0xFF00E5FF),
           unselectedItemColor: const Color(0xFF64748B),
