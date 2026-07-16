@@ -209,9 +209,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // Mappings Card
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                    children: [
                     _buildSectionHeader('CONTROL CODE MAPPINGS'),
-                    Row(
+                    Row(  
                       children: [
                         TextButton(
                           onPressed: _resetStandardMappings,
