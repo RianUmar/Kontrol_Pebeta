@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/control_mapping_service.dart';
@@ -56,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'RESET MAPPINGS',
           style: GoogleFonts.orbitron(color: const Color(0xFFFF3D00), fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        content: const Text('Are you sure you want to reset all standard mappings to defaults (w, s, a, z, d, k, f, j, e, x)?'),
+        content: const Text('Are you sure you want to reset all standard mappings for Robot Car and Hexapod to defaults?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -286,27 +288,101 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildGeneralSettingsCard() {
+    final isCar = _mappingService.robotMode == RobotMode.car;
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF111726).withOpacity(0.55),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFF1E293B).withOpacity(0.4)),
       ),
-      child: SwitchListTile(
-        title: Text(
-          'HAPTIC FEEDBACK',
-          style: GoogleFonts.orbitron(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              'ACTIVE PILOT MODE',
+              style: GoogleFonts.orbitron(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+                color: isCar ? const Color(0xFF00E5FF) : const Color(0xFFFF007F),
+              ),
+            ),
+            subtitle: Text(
+              isCar
+                  ? 'Active: ROBOT CAR (Mobil Robot)'
+                  : 'Active: HEXAPOD ROBOT (Robot Berkaki 6)',
+              style: GoogleFonts.shareTechMono(color: const Color(0xFF94A3B8), fontSize: 11),
+            ),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0C1425),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isCar ? const Color(0xFF00E5FF) : const Color(0xFFFF007F),
+                  width: 1,
+                ),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<RobotMode>(
+                  value: _mappingService.robotMode,
+                  dropdownColor: const Color(0xFF111726),
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.white70),
+                  items: const [
+                    DropdownMenuItem(
+                      value: RobotMode.car,
+                      child: Text('CAR MODE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF00E5FF))),
+                    ),
+                    DropdownMenuItem(
+                      value: RobotMode.hexapod,
+                      child: Text('HEXAPOD', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFFF007F))),
+                    ),
+                  ],
+                  onChanged: (mode) {
+                    if (mode != null) {
+                      _mappingService.setRobotMode(mode);
+                    }
+                  },
+                ),
+              ),
+            ),
           ),
-        ),
-        subtitle: const Text('Vibrate phone briefly during pilot actions to provide tactile feedback'),
-        value: _mappingService.hapticFeedbackEnabled,
-        activeColor: const Color(0xFF00E5FF),
-        onChanged: (val) {
-          _mappingService.setHapticFeedback(val);
-        },
+          const Divider(color: Color(0xFF1E293B), height: 1),
+          SwitchListTile(
+            title: Text(
+              'CONTINUOUS COMMAND REPETITION (STREAM)',
+              style: GoogleFonts.orbitron(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+                color: const Color(0xFF00E5FF),
+              ),
+            ),
+            subtitle: const Text('Kirim sinyal berulang (tiap 100ms) saat tombol ditahan agar motor tidak mati oleh timeout microcontroller (350ms)'),
+            value: _mappingService.continuousStreamEnabled,
+            activeColor: const Color(0xFF00E5FF),
+            onChanged: (val) {
+              _mappingService.setContinuousStream(val);
+            },
+          ),
+          const Divider(color: Color(0xFF1E293B), height: 1),
+          SwitchListTile(
+            title: Text(
+              'HAPTIC FEEDBACK',
+              style: GoogleFonts.orbitron(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+            subtitle: const Text('Getar singkat pada HP saat menekan kontrol'),
+            value: _mappingService.hapticFeedbackEnabled,
+            activeColor: const Color(0xFF00E5FF),
+            onChanged: (val) {
+              _mappingService.setHapticFeedback(val);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -321,34 +397,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: Column(
         children: [
-          _buildMappingSubCategory('Walk Directives', [
-            _buildMapField('maju', 'FORWARD ACTION (W)'),
-            _buildMapField('kiri', 'STRAFE LEFT ACTION (A)'),
-            _buildMapField('kanan', 'STRAFE RIGHT ACTION (S)'),
-            _buildMapField('mundur', 'BACKWARD ACTION (Z)'),
-            _buildMapField('stop', 'STANDBY/RELEASE CODE (X)'),
+          // MODE 1: ROBOT CAR DIRECTIVES
+          _buildMappingSubCategory('Mode 1: Robot Car Directives', [
+            _buildMapField('car_maju', 'MAJU / FORWARD (w)'),
+            _buildMapField('car_mundur', 'MUNDUR / BACKWARD (s)'),
+            _buildMapField('car_kiri', 'BELOK KIRI / TURN LEFT (f)'),
+            _buildMapField('car_kanan', 'BELOK KANAN / TURN RIGHT (j)'),
+            _buildMapField('car_klakson', 'KLAKSON / HORN BUZZER (a)'),
+            _buildMapField('car_stop', 'EMERGENCY STOP CODE (x)'),
           ]),
+
           const Divider(color: Color(0xFF1E293B), height: 32),
-          _buildMappingSubCategory('Rotation Commands', [
-            _buildMapField('putar_kiri', 'ROTATE LEFT (D)'),
-            _buildMapField('putar_kanan', 'ROTATE RIGHT (K)'),
+
+          // MODE 2: HEXAPOD ROBOT DIRECTIVES
+          _buildMappingSubCategory('Mode 2: Hexapod Walk Directives', [
+            _buildMapField('hex_maju', 'HEX FORWARD (w)'),
+            _buildMapField('hex_mundur', 'HEX BACKWARD (z)'),
+            _buildMapField('hex_kiri', 'HEX STRAFE LEFT (a)'),
+            _buildMapField('hex_kanan', 'HEX STRAFE RIGHT (s)'),
+            _buildMapField('hex_stop', 'HEX STANDBY/RELEASE (x)'),
           ]),
+
           const Divider(color: Color(0xFF1E293B), height: 32),
-          _buildMappingSubCategory('Head Movements', [
-            _buildMapField('kepala_kiri', 'HEAD TILT LEFT (F)'),
-            _buildMapField('kepala_tengah', 'HEAD CENTER (E)'),
-            _buildMapField('kepala_kanan', 'HEAD TILT RIGHT (J)'),
+
+          _buildMappingSubCategory('Mode 2: Hexapod Rotation Commands', [
+            _buildMapField('hex_putar_kiri', 'HEX ROTATE LEFT (d)'),
+            _buildMapField('hex_putar_kanan', 'HEX ROTATE RIGHT (k)'),
           ]),
+
           const Divider(color: Color(0xFF1E293B), height: 32),
-          _buildMappingSubCategory('Gripper Manipulator', [
-            _buildMapField('lengan_naik', 'ARM UP START (u)'),
-            _buildMapField('lengan_naik_stop', 'ARM UP STOP (U)'),
-            _buildMapField('lengan_turun', 'ARM DOWN START (n)'),
-            _buildMapField('lengan_turun_stop', 'ARM DOWN STOP (N)'),
-            _buildMapField('capit_tangkap', 'CLAW CLOSE START (o)'),
-            _buildMapField('capit_tangkap_stop', 'CLAW CLOSE STOP (O)'),
-            _buildMapField('capit_lepas', 'CLAW OPEN START (c)'),
-            _buildMapField('capit_lepas_stop', 'CLAW OPEN STOP (C)'),
+
+          _buildMappingSubCategory('Mode 2: Hexapod Head Movements', [
+            _buildMapField('hex_kepala_kiri', 'HEX HEAD TILT LEFT (f)'),
+            _buildMapField('hex_kepala_tengah', 'HEX HEAD CENTER (e)'),
+            _buildMapField('hex_kepala_kanan', 'HEX HEAD TILT RIGHT (j)'),
+          ]),
+
+          const Divider(color: Color(0xFF1E293B), height: 32),
+
+          _buildMappingSubCategory('Mode 2: Hexapod Gripper Manipulator', [
+            _buildMapField('hex_lengan_naik', 'ARM UP START (u)'),
+            _buildMapField('hex_lengan_naik_stop', 'ARM UP STOP (U)'),
+            _buildMapField('hex_lengan_turun', 'ARM DOWN START (n)'),
+            _buildMapField('hex_lengan_turun_stop', 'ARM DOWN STOP (N)'),
+            _buildMapField('hex_capit_tangkap', 'CLAW CLOSE START (o)'),
+            _buildMapField('hex_capit_tangkap_stop', 'CLAW CLOSE STOP (O)'),
+            _buildMapField('hex_capit_lepas', 'CLAW OPEN START (c)'),
+            _buildMapField('hex_capit_lepas_stop', 'CLAW OPEN STOP (C)'),
           ]),
         ],
       ),

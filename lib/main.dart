@@ -1,7 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'services/bluetooth_service.dart';
 import 'services/control_mapping_service.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/controller_screen.dart';
